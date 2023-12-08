@@ -18,6 +18,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val animeListState = AnimeListState(animeRepository)
+//            val favouriteListState = remember { AnimeListState(animeRepository) }
             val usersState = remember{ UsersState(usersRepository) }
             LaunchedEffect(
                 key1 = animeListState,

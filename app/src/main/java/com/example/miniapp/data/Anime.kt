@@ -9,16 +9,18 @@ data class AnimeList(
 
 data class Anime (
     @SerializedName("mal_id")
-    val id: String,
+    val id: Int,
 
     val titles : ArrayList<AnimeTitle>,
-
     val images : AnimeImage,
-
     val episodes:String,
-    val favorites:String,
+    val favorites:Int?,
     val synopsis : String,
-    val year: String?
+    val year: String?,
+    val score: Double?,
+    val scored_by: Int?,
+    val type: String?,
+    val rank: Int?
 )
 
 data class AnimeImage(

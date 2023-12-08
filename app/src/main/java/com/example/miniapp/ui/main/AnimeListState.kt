@@ -10,13 +10,6 @@ class AnimeListState (private val animeRepository: AnimeRepository) {
 
     suspend fun getAnimes() {
         animes.value = animeRepository.getAnime().animeList
-        println(animes.value.get(0).id)
-        println(animes.value.get(0).titles[0].title)
-        println(animes.value.get(0).images.jpg.imageURL)
-        println(animes.value.get(0).episodes)
-        println(animes.value.get(0).favorites)
-        println(animes.value.get(0).synopsis)
-        println(animes.value.get(0).year)
     }
 
 
