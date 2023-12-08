@@ -14,18 +14,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.miniapp.data.LocalUser
 
 @Composable
-fun Login(usersState: UsersState) {
+fun Login(usersState: UsersState, navController: NavHostController) {
     val signInState = remember {SignInState()}
 
     Column(modifier = Modifier) {
         Text("Login", fontSize = 40.sp)
+        Text("Log in/Sign up to unlock all app features!")
+
 
         Form(signInState)
 
-        Buttons(signInState, usersState)
+        Buttons(signInState, usersState, navController)
     }
 
 }
@@ -33,8 +36,7 @@ fun Login(usersState: UsersState) {
 @Composable
 fun Form(signInState: SignInState) {
     Column {
-        CustomTextField(signInState.nameLabel, signInState.name, signInState.onNameChanged)
-        CustomTextField(signInState.emailLabel, signInState.email, signInState.onEmailChanged)
+        CustomTextField(signInState.userNameLabel, signInState.userName, signInState.onUserNameChanged)
         CustomTextField(signInState.passwordLabel, signInState.password, signInState.onPasswordChanged)
     }
 }
@@ -61,22 +63,29 @@ fun CustomTextField(label:String, value: String, onValueChanged: (String) -> Uni
 }
 
 @Composable
-fun Buttons(signInState: SignInState, usersState: UsersState) {
+fun Buttons(
+    signInState: SignInState,
+    usersState: UsersState,
+    navController: NavHostController
+) {
     Row (modifier = Modifier
         .fillMaxWidth()
         .padding(20.dp),
         horizontalArrangement = Arrangement.SpaceEvenly) {
         Button(
             onClick = {
-//                usersState.insertEntity(LocalUser(uid = signInState.uid.toInt(), name = signInState.name, email = signInState.email))
+                if (signInState.userName.length > 4 && signInState.password.length > 4) {
+                    var currentUser:LocalUser? = usersState.findUser(signInState.userName)
+                    if (currentUser == null) {
+                        currentUser = LocalUser(userName = signInState.userName, password = signInState.password, null)
+                        usersState.insertEntity(currentUser)
+                    }
+                    usersState.updateUser(currentUser)
+                    navController.navigate(Screen.HOME.route)
+                }
             }
         ) {
-            Text(text = "Add", fontSize = 30.sp)
-        }
-        Button(onClick = {
-            usersState.refresh()
-        }) {
-            Text(text = "Refresh", fontSize = 30.sp)
+            Text(text = "Log in", fontSize = 30.sp)
         }
     }
 }

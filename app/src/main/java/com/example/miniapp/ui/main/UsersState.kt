@@ -7,18 +7,18 @@ import com.example.miniapp.data.LocalUser
 import com.example.miniapp.data.UsersRepository
 
 class UsersState (private val usersRepository: UsersRepository) {
-    var users by mutableStateOf(usersRepository.getAll())
-
-    fun refresh(){
-        users = usersRepository.getAll()
-    }
+    var user by mutableStateOf(LocalUser("", null, null))
 
     fun insertEntity(user: LocalUser){
         usersRepository.insertEntity(user)
     }
 
-    fun deleteEntity(user: LocalUser) {
-        usersRepository.deleteEntity(user)
+    fun findUser(userName : String) : LocalUser? {
+        return usersRepository.findUser(userName)
     }
 
+
+    fun updateUser(currentUser : LocalUser) : Unit {
+        user = currentUser
+    }
 }

@@ -26,12 +26,12 @@ class MyApp : Application() {
         Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java,
-            "my-cool-database"
+            "miniapp-database"
         )
             .allowMainThreadQueries()
             .build()
     }
 
-    val usersRepository by lazy { UsersRepository(db.userDao()) }
+    val usersRepository by lazy { UsersRepository(db.dao()) }
 
 }

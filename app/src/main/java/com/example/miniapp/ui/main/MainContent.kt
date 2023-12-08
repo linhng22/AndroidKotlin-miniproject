@@ -28,23 +28,22 @@ fun MainContent(
     usersState: UsersState
 ) {
     val navController = rememberNavController()
-    var favouriteList = remember { mutableListOf<Anime>() }
-
+    val favouriteList = remember { mutableListOf<Anime>() }
     Scaffold (
         topBar = {
-            TopNavBar(navController = navController)
+            TopNavBar(navController = navController, usersState.user)
         }
     ) {
         NavHost(
             modifier = Modifier.padding(it),
             navController = navController,
-            startDestination = Screen.HOME.route,
+            startDestination = Screen.LOGIN.route,
             builder = {
                 composable(Screen.LOGIN.route) {
-                    Login(usersState)
+                    Login(usersState, navController)
                 }
                 composable(Screen.HOME.route) {
-                    Home(animeListState = animeListState, navController)
+                    Home(animeListState = animeListState, navController, usersState.user)
                 }
                 composable("${Screen.DETAILS.route}/{id}",
                     arguments = listOf(
@@ -54,7 +53,7 @@ fun MainContent(
                     )) {
                     var id = it.arguments?.getInt("id")
                     println("anime id: ${id}")
-                    Details(id!!, animeListState = animeListState, favouriteList, navController)
+                    Details(id!!, animeListState = animeListState, favouriteList, navController, usersState.user)
                 }
                 composable(Screen.FAVOURITES.route) {
                     Favourites(favouriteList, navController)

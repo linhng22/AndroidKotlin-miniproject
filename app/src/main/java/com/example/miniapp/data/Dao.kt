@@ -6,7 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 
 @Dao
-interface UserDao {
+interface Dao {
     @Query("SELECT * FROM miniapp_users")
     fun getAll():List<LocalUser>
 
@@ -16,6 +16,7 @@ interface UserDao {
     @Delete
     fun delete(user:LocalUser)
 
-
+    @Query("SELECT * FROM miniapp_users WHERE userName = :userName")
+    fun findUser(userName:String) : LocalUser?
 
 }

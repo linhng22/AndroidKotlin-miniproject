@@ -1,19 +1,20 @@
 package com.example.miniapp.data
 
-import com.example.miniapp.data.LocalUser
-import com.example.miniapp.data.UserDao
 
-
-class UsersRepository(private val userDao: UserDao) { //contains business logics
+class UsersRepository(private val dao: Dao) { //contains business logics
     fun insertEntity(user: LocalUser) {
-        userDao.insert(user)
+        dao.insert(user)
     }
 
     fun getAll():List<LocalUser> {
-        return userDao.getAll()
+        return dao.getAll()
     }
 
     fun deleteEntity(user:LocalUser) {
-        userDao.delete(user)
+        dao.delete(user)
+    }
+
+    fun findUser(userName : String) : LocalUser? {
+        return dao.findUser(userName)
     }
 }

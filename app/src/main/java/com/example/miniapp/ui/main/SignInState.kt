@@ -12,20 +12,14 @@ class SignInState {
 //    }
 
 
-    val nameLabel:String = "First name"
-    var name by mutableStateOf("")
-    val onNameChanged:(String) -> Unit = {
-        name = it
+    val userNameLabel:String = "User name"
+    var userName by mutableStateOf("")
+    val onUserNameChanged:(String) -> Unit = {
+        userName = it
+        validUserName = userName.length > 4
     }
+    var validUserName = false
 
-    val emailLabel:String = "Email address"
-    var email by mutableStateOf("")
-    val onEmailChanged:(String) -> Unit = {
-        email = it
-        validEmail = email.contains("@") //UI logic
-    }
-
-    var validEmail = false
 
     val passwordLabel = "Password"
     var password by mutableStateOf("")

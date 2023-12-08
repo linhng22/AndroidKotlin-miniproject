@@ -1,6 +1,7 @@
 package com.example.miniapp.ui.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -16,19 +17,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.miniapp.data.Anime
+import com.example.miniapp.data.LocalUser
 
 @Composable
 fun Details(
     id: Int,
     animeListState: AnimeListState,
     favouriteList: MutableList<Anime>,
-    navController: NavHostController
+    navController: NavHostController,
+    user: LocalUser
 ) {
 
     var anime: Anime? = null
@@ -39,14 +43,19 @@ fun Details(
     }
 
     if (anime != null) {
-        showDetails(anime, favouriteList, navController)
+        showDetails(anime, favouriteList, navController, user)
     }
 
 
 }
 
 @Composable
-fun showDetails(anime: Anime, favouriteList: MutableList<Anime>, navController: NavHostController) {
+fun showDetails(
+    anime: Anime,
+    favouriteList: MutableList<Anime>,
+    navController: NavHostController,
+    user: LocalUser
+) {
     var isFavourited = favouriteList.contains(anime)
 
     LazyColumn (
@@ -73,11 +82,20 @@ fun showDetails(anime: Anime, favouriteList: MutableList<Anime>, navController: 
                 )
                 OtherInfo(anime, isFavourited)
             }
-
-            FavouriteButton(anime = anime, isFavourited = isFavourited,
-                favouriteList = favouriteList, navController = navController)
-
-            Description(anime = anime)
+            if (user.password != null) {
+                FavouriteButton(
+                    anime = anime, isFavourited = isFavourited,
+                    favouriteList = favouriteList, navController = navController
+                )
+                Description(anime = anime)
+            } else {
+                Text("Please log in here to see the description!", fontSize = 30.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(10.dp, 20.dp)
+                        .clickable { navController.navigate(Screen.LOGIN.route)},
+                    color = Color.Blue
+                )
+            }
 
         }
     }
