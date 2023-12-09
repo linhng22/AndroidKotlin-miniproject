@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -27,16 +29,29 @@ import com.example.miniapp.data.Anime
 import com.example.miniapp.data.LocalUser
 
 @Composable
-fun Home(animeListState: AnimeListState, navController: NavController, user: LocalUser) {
-    Text("Welcome ${user.userName}!", fontSize = 30.sp)
-    LazyVerticalGrid(
-        GridCells.Fixed(2),
-        modifier = Modifier
-            .padding(5.dp, 10.dp)
-            .background(Color.White)
+fun Home(
+    animeListState: AnimeListState,
+    navController: NavController,
+    user: LocalUser
+) {
+    Column (
+        modifier = Modifier.fillMaxSize()
+            .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(animeListState.animes.value.size) { index ->
-            AnimeItem(anime = animeListState.animes.value[index], navController)
+        Text("Welcome ${user.userName}!", fontSize = 25.sp,
+            modifier = Modifier.padding(0.dp, 15.dp, 0.dp, 0.dp),
+            color = Color(0xFFFF5722),
+            fontWeight = FontWeight.Bold
+        )
+        LazyVerticalGrid(
+            GridCells.Fixed(2),
+            modifier = Modifier
+                .padding(5.dp, 10.dp)
+        ) {
+            items(animeListState.animes.value.size) { index ->
+                AnimeItem(anime = animeListState.animes.value[index], navController)
+            }
         }
     }
 
@@ -53,7 +68,6 @@ fun AnimeItem(anime: Anime, navController: NavController) {
             .padding(5.dp, 10.dp)
             .size(270.dp)
             .clickable {
-                println("Home, animeID = ${anime.id}")
                 navController.navigate("${Screen.DETAILS.route}/${anime.id}")
             },
     ){

@@ -71,7 +71,7 @@ fun TopNavBar(navController: NavController, user: LocalUser) {
             } else {
                 IconButton(
                     onClick = {
-                        navController.navigate(Screen.LOGIN.route)
+                        navController.navigate(Screen.SIGNIN.route)
                     }
                 ) {
                     Icon(

@@ -4,18 +4,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.miniapp.data.Anime
 
 
 enum class Screen(val route:String) {
-    LOGIN("login"),
+    SIGNIN("signin"),
     HOME("home"),
     DETAILS("details"),
     FAVOURITES("favourites"),
@@ -25,10 +23,11 @@ enum class Screen(val route:String) {
 @Composable
 fun MainContent(
     animeListState: AnimeListState,
-    usersState: UsersState
+    usersState: UsersState,
+    favouriteListState: AnimeListState
 ) {
     val navController = rememberNavController()
-    val favouriteList = remember { mutableListOf<Anime>() }
+    favouriteListState.refreshFavouriteList(usersState.user.favouriteAnimeIDs, animeListState)
     Scaffold (
         topBar = {
             TopNavBar(navController = navController, usersState.user)
@@ -37,26 +36,26 @@ fun MainContent(
         NavHost(
             modifier = Modifier.padding(it),
             navController = navController,
-            startDestination = Screen.LOGIN.route,
+            startDestination = Screen.SIGNIN.route,
             builder = {
-                composable(Screen.LOGIN.route) {
-                    Login(usersState, navController)
+                composable(Screen.SIGNIN.route) {
+                    Signin(usersState, navController)
                 }
                 composable(Screen.HOME.route) {
                     Home(animeListState = animeListState, navController, usersState.user)
                 }
                 composable("${Screen.DETAILS.route}/{id}",
                     arguments = listOf(
-                        navArgument("id"){// because {image} is string by default
+                        navArgument("id"){
                             type = NavType.IntType
                         }
                     )) {
                     var id = it.arguments?.getInt("id")
-                    println("anime id: ${id}")
-                    Details(id!!, animeListState = animeListState, favouriteList, navController, usersState.user)
+                    Details(id!!, animeListState = animeListState, favouriteListState,
+                        navController, usersState.user)
                 }
                 composable(Screen.FAVOURITES.route) {
-                    Favourites(favouriteList, navController)
+                    Favourites(favouriteListState, navController)
                 }
             }
         )

@@ -7,7 +7,7 @@ import com.example.miniapp.data.LocalUser
 import com.example.miniapp.data.UsersRepository
 
 class UsersState (private val usersRepository: UsersRepository) {
-    var user by mutableStateOf(LocalUser("", null, null))
+    var user by mutableStateOf(LocalUser("", null, ""))
 
     fun insertEntity(user: LocalUser){
         usersRepository.insertEntity(user)

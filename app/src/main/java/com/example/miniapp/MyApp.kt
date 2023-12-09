@@ -18,9 +18,6 @@ class MyApp : Application() {
         }
     }
 
-    val animeRepository by lazy {
-        AnimeRepository(client)
-    }
 
     private val db by lazy {
         Room.databaseBuilder(
@@ -34,4 +31,7 @@ class MyApp : Application() {
 
     val usersRepository by lazy { UsersRepository(db.dao()) }
 
+    val animeRepository by lazy {
+        AnimeRepository(client, db.dao())
+    }
 }

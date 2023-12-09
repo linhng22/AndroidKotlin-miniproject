@@ -30,33 +30,27 @@ import com.example.miniapp.data.LocalUser
 fun Details(
     id: Int,
     animeListState: AnimeListState,
-    favouriteList: MutableList<Anime>,
+    favouriteListState: AnimeListState,
     navController: NavHostController,
     user: LocalUser
 ) {
 
-    var anime: Anime? = null
-    for (i in 0..<animeListState.animes.value.size) {
-        if (animeListState.animes.value.get(i).id == id) {
-            anime = animeListState.animes.value.get(i)
-        }
-    }
+    var anime: Anime? = animeListState.findAnimeById(id, animeListState.animes)
 
     if (anime != null) {
-        showDetails(anime, favouriteList, navController, user)
+        showDetails(anime, favouriteListState, navController, user)
     }
-
 
 }
 
 @Composable
 fun showDetails(
     anime: Anime,
-    favouriteList: MutableList<Anime>,
+    favouriteListState: AnimeListState,
     navController: NavHostController,
     user: LocalUser
 ) {
-    var isFavourited = favouriteList.contains(anime)
+    var isFavourited = favouriteListState.favourites.contains(anime)
 
     LazyColumn (
         modifier = Modifier
@@ -85,14 +79,15 @@ fun showDetails(
             if (user.password != null) {
                 FavouriteButton(
                     anime = anime, isFavourited = isFavourited,
-                    favouriteList = favouriteList, navController = navController
+                    favouriteListState = favouriteListState, navController = navController,
+                    user = user
                 )
                 Description(anime = anime)
             } else {
-                Text("Please log in here to see the description!", fontSize = 30.sp,
+                Text("Please sign in here to see the description!", fontSize = 30.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(10.dp, 20.dp)
-                        .clickable { navController.navigate(Screen.LOGIN.route)},
+                        .clickable { navController.navigate(Screen.SIGNIN.route)},
                     color = Color.Blue
                 )
             }
@@ -146,7 +141,13 @@ fun Description(anime: Anime) {
 }
 
 @Composable
-fun FavouriteButton(anime: Anime, isFavourited:Boolean, favouriteList:MutableList<Anime>, navController:NavController) {
+fun FavouriteButton(
+    anime: Anime,
+    isFavourited: Boolean,
+    favouriteListState: AnimeListState,
+    navController: NavController,
+    user: LocalUser
+) {
     var buttonText = if (isFavourited) {
         "Remove from Favourites"
     } else {
@@ -159,9 +160,11 @@ fun FavouriteButton(anime: Anime, isFavourited:Boolean, favouriteList:MutableLis
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF5722)),
         onClick = {
             if (!isFavourited) {
-                favouriteList.add(anime)
+                favouriteListState.favourites.add(anime)
+                favouriteListState.addFavouriteID(user, anime.id)
             } else {
-                favouriteList.remove(anime)
+                favouriteListState.favourites.remove(anime)
+                favouriteListState.removeFavouriteId(user, anime.id)
             }
             navController.navigate("${Screen.DETAILS.route}/${anime.id}")
         }
